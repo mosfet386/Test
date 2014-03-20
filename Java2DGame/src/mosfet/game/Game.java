@@ -16,6 +16,8 @@ import mosfet.game.gfx.GameColor;
 import mosfet.game.gfx.Screen;
 import mosfet.game.gfx.SpriteSheet;
 import mosfet.game.level.Level;
+import mosfet.game.net.GameClient;
+import mosfet.game.net.GameServer;
 
 public class Game extends Canvas implements Runnable{
 
@@ -40,6 +42,9 @@ public class Game extends Canvas implements Runnable{
 	public InputHandler input;
 	public Level level;
 	public Player player;
+	
+	private GameClient socketClient;
+	private GameServer socketServer;
 	
 	public synchronized void stop(){
 		running=false;
@@ -121,6 +126,7 @@ public class Game extends Canvas implements Runnable{
 		level=new Level("/levels/medium_water_level.png");
 		player=new Player(level,0,0,input,JOptionPane.showInputDialog(this,"Enter a username"));
 		level.addEntity(player);
+		socketClient.sendData("ping".getBytes());
 	}
 	@Override
 	public void run(){
@@ -156,7 +162,7 @@ public class Game extends Canvas implements Runnable{
 			//Print framesPerS & TicksPerS
 			if(System.currentTimeMillis()-lastTimeMS>=1000){
 				lastTimeMS+=1000;
-				System.out.println("ticks="+ticks+" frames="+frames+" sPerFrame="+msPerFrame);
+				frame.setTitle("ticks="+ticks+" frames="+frames+" sPerFrame="+msPerFrame);
 				frames=0;
 				ticks=0;
 			}
@@ -165,6 +171,14 @@ public class Game extends Canvas implements Runnable{
 	public synchronized void start(){
 		running=true;
 		new Thread(this,"Game Main").start();
+		if(JOptionPane.showConfirmDialog(this,"Do you want to act as a server?")==0){
+			socketServer=new GameServer(this);
+			socketServer.setName("Server");
+			socketServer.start();
+		}
+		socketClient=new GameClient(this,"localhost");
+		socketClient.setName("Client");
+		socketClient.start(); //start the client Send & Receive Thread
 	}
 	public Game(){
 		setMinimumSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
