@@ -1,0 +1,5 @@
+package mosfet.game.net.packet;
+
+public class Packet {
+
+}

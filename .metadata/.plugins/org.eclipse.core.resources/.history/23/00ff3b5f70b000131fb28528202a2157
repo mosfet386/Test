@@ -1,0 +1,5 @@
+package mosfet.game.entities;
+
+public class PlayerMP {
+
+}

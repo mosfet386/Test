@@ -1,0 +1,34 @@
+package mosfet.game.net.packets;
+
+import mosfet.game.net.GameClient;
+import mosfet.game.net.GameServer;
+
+public abstract class Packet {
+
+	public static enum PacketTypes{
+		INVALID(-1),LOGIN(00),DISCONNECT(01);
+		private int packetId;
+		private PacketTypes(int packetId){this.packetId=packetId;}
+		public int getID(){return packetId;}
+	}
+	public byte packetId;
+	
+	public static PacketTypes lookupPacket(String packetId){
+		try{return lookupPacket(Integer.parseInt(packetId));}
+		catch(NumberFormatException e){return PacketTypes.INVALID;}
+	}
+	public static PacketTypes lookupPacket(int id){
+		for(PacketTypes p:PacketTypes.values()){if(p.getID()==id){return p;}}
+		return PacketTypes.INVALID;
+	}
+	public String readData(byte[] data){
+		String message=new String(data).trim();
+		return message.substring(2); //first two chars are for the Id
+	}
+	public abstract byte[] getData();
+	public abstract void writeData(GameClient client);
+	public abstract void writeData(GameServer server);
+	public Packet(int packetId){
+		this.packetId=(byte)packetId;
+	}
+}

@@ -1,0 +1,17 @@
+package mosfet.game.net.packet;
+
+public abstract class Packet {
+
+	public static enum PacketTypes{
+		INVALID(-1),LOGIN(00),DISCONNECT(01);
+		private int packetId;
+		private PacketTypes(int packetId){this.packetId=packetId;}
+		public int getID(){return packetId;}
+	}
+	public byte packetId;
+	public abstract void writeData(GameClient client);
+	public abstract void writeData(GameServer client);
+	public Packet(int packetId){
+		this.packetId=(byte)packetId;
+	}
+}
