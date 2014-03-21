@@ -9,6 +9,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import mosfet.game.entities.Entity;
+import mosfet.game.entities.PlayerMP;
 import mosfet.game.gfx.Screen;
 import mosfet.game.level.tiles.Tile;
 
@@ -23,6 +24,16 @@ public class Level {
 	private String imagePath;
 	private BufferedImage image;
 	
+	public void removePlayerMP(String username){
+		int index=0;
+		for(Entity e:entities){
+			if(e instanceof PlayerMP && ((PlayerMP)e).getUsername().equals(username)){
+				break;
+			}
+			index++;
+		}
+		this.entities.remove(index);
+	}
 	public void addEntity(Entity entity){
 		this.entities.add(entity);
 	}

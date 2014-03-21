@@ -14,6 +14,7 @@ import mosfet.game.entities.PlayerMP;
 import mosfet.game.net.packets.Packet;
 import mosfet.game.net.packets.Packet.PacketTypes;
 import mosfet.game.net.packets.Packet00Login;
+import mosfet.game.net.packets.Packet01Disconnect;
 
 public class GameServer extends Thread{
 	private DatagramSocket socket;
@@ -21,6 +22,24 @@ public class GameServer extends Thread{
 	Packet packet=null;
 	private List<PlayerMP> connectedPlayers=new ArrayList<PlayerMP>();
 	
+	public int getPlayerMPIndex(String username){
+		int index=0;
+		for(PlayerMP p:connectedPlayers){
+			if(p.getUsername().equals(username)){break;}
+			index++;
+		}
+		return index;
+	}
+	public PlayerMP getPlayerMP(String username){
+		for(PlayerMP p:connectedPlayers){
+			if(p.getUsername().equals(username)){return p;}
+		}
+		return null;
+	}
+	public void removeConnection(Packet01Disconnect packet){
+		this.connectedPlayers.remove(getPlayerMPIndex(packet.getUsername()));
+		packet.writeData(this);
+	}
 	public void addConnection(PlayerMP player,Packet00Login packet){
 		 boolean alreadyConnected=false;
 		 for(PlayerMP p:connectedPlayers){
@@ -52,18 +71,25 @@ public class GameServer extends Thread{
 	}
 	public void parsePacket(byte[] data,InetAddress address,int port){
 		String message=new String(data).trim();
+		System.out.println("Testing message: "+message);
 		PacketTypes type=Packet.lookupPacket(message.substring(0,2));
 		switch(type){
 			case INVALID: break;
 			case LOGIN: 
-				this.packet=new Packet00Login(data); 
+				packet=new Packet00Login(data); 
 				System.out.println("["+address.getHostAddress()+":"+port+"]"+
 									((Packet00Login)packet).getUsername()+" has connected...");
 				PlayerMP player=new PlayerMP(game.level,100,100,
 									((Packet00Login)packet).getUsername(),address,port);
 				addConnection(player,(Packet00Login)packet);
 				break;
-			case DISCONNECT: break;
+			case DISCONNECT: 
+				packet=new Packet01Disconnect(data); 
+				System.out.println("["+address.getHostAddress()+":"+port+"]"+
+									((Packet01Disconnect)packet).getUsername()+
+									" has disconnected...");
+				removeConnection((Packet01Disconnect)packet);
+				break;
 			default:
 		}
 	}

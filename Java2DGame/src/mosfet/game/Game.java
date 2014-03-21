@@ -28,7 +28,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int HEIGHT=WIDTH*(12/9);
 	public static final int SCALE=3;
 	public static final String NAME="Game";
-	private JFrame frame;
+	public JFrame frame;
 	
 	public boolean running=false;
 	public int tickcount=0;
@@ -42,11 +42,12 @@ public class Game extends Canvas implements Runnable{
 	
 	public Screen screen;
 	public InputHandler input;
+	public WindowHandler windowHandler;
 	public Level level;
 	public Player player;
 	
-	private GameClient socketClient;
-	private GameServer socketServer;
+	public GameClient socketClient;
+	public GameServer socketServer;
 	
 	public synchronized void stop(){
 		running=false;
@@ -125,6 +126,7 @@ public class Game extends Canvas implements Runnable{
 		//colors.get(a,b,c,d) usage: 555 full red,green,blue; 505 full red, 0 green,full blue
 		screen=new Screen(WIDTH,HEIGHT,new SpriteSheet("/spriteSheet.png"));
 		input=new InputHandler(this);
+		windowHandler=new WindowHandler(this);
 		level=new Level("/levels/medium_water_level.png");
 		player=new PlayerMP(level,100,100,input,
 				JOptionPane.showInputDialog(this,"Enter a username"),null,-1);

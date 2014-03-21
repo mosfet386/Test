@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workingSetManager>
+<workingSet editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1395374587455_5" label="Java2DGame" name="Java2DGame">
+<item elementID="=Java2DGame" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSet>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1395345872003_0" label="Window Working Set" name="Aggregate for window 1395345872003"/>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1395347252451_1" label="Window Working Set" name="Aggregate for window 1395347252451"/>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1395352009125_2" label="Window Working Set" name="Aggregate for window 1395352009125"/>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1395363961286_3" label="Window Working Set" name="Aggregate for window 1395363961286"/>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1395373891526_4" label="Window Working Set" name="Aggregate for window 1395373891526"/>
 </workingSetManager>

@@ -101,7 +101,7 @@ public class Player extends Mob{
 		tickCount++;
 	}
 	public Player(Level level, int x, int y, InputHandler input, String username) {
-		super(level, "Player", x, y, 1);
+		super(level, username, x, y, 1);
 		this.input=input;
 		this.username=username;
 	}
