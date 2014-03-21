@@ -65,15 +65,17 @@ public class GameServer extends Thread{
 		for(PlayerMP p:connectedPlayers){sendData(data,p.ipAddress,p.port);}
 	}
 	public void sendData(byte[] data,InetAddress ipAddress, int port){
-		DatagramPacket packet=new DatagramPacket(data,data.length,ipAddress,port);
-		try {socket.send(packet);}
-		catch (IOException e){e.printStackTrace();}
+		if(game.isApplet){
+			DatagramPacket packet=new DatagramPacket(data,data.length,ipAddress,port);
+			try {socket.send(packet);}
+			catch (IOException e){e.printStackTrace();}
+		}
 	}
 	public void parsePacket(byte[] data,InetAddress address,int port){
 		String message=new String(data).trim();
-		System.out.println("Testing message: "+message);
 		PacketTypes type=Packet.lookupPacket(message.substring(0,2));
 		switch(type){
+			default:
 			case INVALID: break;
 			case LOGIN: 
 				packet=new Packet00Login(data); 
@@ -90,7 +92,6 @@ public class GameServer extends Thread{
 									" has disconnected...");
 				removeConnection((Packet01Disconnect)packet);
 				break;
-			default:
 		}
 	}
 	public void run(){

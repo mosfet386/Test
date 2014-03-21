@@ -1,0 +1,14 @@
+<html>
+	<head>
+	<title>Java 2D Game Engine</title>
+	</head>
+	<body bgcolor="#333">
+		<center>
+			<applet code>"mosfet.game.GameLauncher"archive
+			"http://mosfet/java/applet/Java2DGameEngine.jar" width="480" height="360" 
+			title="Java(TM)"</applet>
+			<font color"a0a0a0">You need<a href="http://java.com"><font color="a0a0ff">Java</font><a>to run this application
+			</font>
+		</center>
+	</body>
+</html>

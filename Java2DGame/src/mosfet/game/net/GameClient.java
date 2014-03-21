@@ -46,9 +46,11 @@ public class GameClient extends Thread{
 		}
 	}
 	public void sendData(byte[] data){
-		DatagramPacket packet=new DatagramPacket(data,data.length,ipAddress,5335);
-		try {socket.send(packet);}
-		catch (IOException e){e.printStackTrace();}
+		if(game.isApplet){
+			DatagramPacket packet=new DatagramPacket(data,data.length,ipAddress,5335);
+			try {socket.send(packet);}
+			catch (IOException e){e.printStackTrace();}
+		}
 	}
 	public void run(){
 		while(true){

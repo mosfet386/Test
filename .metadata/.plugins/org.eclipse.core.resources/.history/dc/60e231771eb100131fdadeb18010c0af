@@ -1,0 +1,219 @@
+package mosfet.game;
+import java.awt.BorderLayout;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import mosfet.game.entities.Player;
+import mosfet.game.entities.PlayerMP;
+import mosfet.game.gfx.Font;
+import mosfet.game.gfx.GameColor;
+import mosfet.game.gfx.Screen;
+import mosfet.game.gfx.SpriteSheet;
+import mosfet.game.level.Level;
+import mosfet.game.net.GameClient;
+import mosfet.game.net.GameServer;
+import mosfet.game.net.packets.Packet00Login;
+
+public class Game extends Canvas implements Runnable{
+
+	private static final long serialVersionUID = 1L;
+	public static final int WIDTH=160;
+	public static final int HEIGHT=WIDTH*(12/9);
+	public static final int SCALE=3;
+	public static final String NAME="Game";
+	public static final Dimension DIMENSIONS=new Dimension(WIDTH*SCALE,HEIGHT*SCALE);
+	public JFrame frame;
+	
+	private Thread thread;
+	public boolean running=false;
+	public int tickcount=0;
+	
+	private SpriteSheet spriteSheet=new SpriteSheet("/spriteSheet.png");
+	//creates a buffer that stores 3 byte triples corresponding to RGB integer values 
+	private BufferedImage image=new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
+	//returns the image's raster to be editable by the integer array pixels
+	private int[] pixels=((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	private int[] colors=new int[6*6*6]; //6 shades of RGB, 216 colors
+	
+	public Screen screen;
+	public InputHandler input;
+	public WindowHandler windowHandler;
+	public Level level;
+	public Player player;
+	
+	public GameClient socketClient;
+	public GameServer socketServer;
+	
+	public boolean debug=true;
+	public static enum DebugLevel{INFO,WARNING,SEVERE;}
+	public boolean isApplet=true; 
+	
+	public void debug(DebugLevel level,String msg){
+		switch(level){
+			default:
+			case INFO: if(debug){System.out.println("["+NAME+"]Info:"+msg);} break;
+			case WARNING: if(debug){System.out.println("["+NAME+"]Warning:"+msg);} break;
+			case SEVERE: 
+				if(debug){System.out.println("["+NAME+"]Severe:"+msg);} 
+				stop();
+				break;
+		}
+	}
+	public void render(){ //display logic
+		//clears frame and redraws it, can cause image tearing
+		BufferStrategy bs=getBufferStrategy();
+		if(bs==null){
+			createBufferStrategy(3); //stored frame sequence, prevent tearing
+			return;
+		}
+
+		int xOffset=player.x-(screen.width/2);
+		int yOffset=player.y-(screen.height/2);
+		level.renderTiles(screen,xOffset,yOffset);
+		//ruler
+		//for(int x=0;x<level.width;x++){
+		//	int color=GameColor.get(-1, -1, -1, 000);
+		//	if(x%10==0 && x!=0){
+		//		color=GameColor.get(-1, -1, -1, 500);
+		//	}
+		//	Font.render((x%10)+"",screen,0+(x*8),0,color);
+		//}
+		//ruler
+		for(int x=0;x<level.width;x++){
+			int color=GameColor.get(-1, -1, -1, 000);
+			if(x%10==0 && x!=0){
+				color=GameColor.get(-1, -1, -1, 500);
+			}
+			Font.render((x%10)+"",screen,0+(x*8),0,color,1);
+		}
+		for(int y=0;y<level.height;y++){
+			int color=GameColor.get(-1, -1, -1, 000);
+			if(y%10==0 && y!=0){
+				color=GameColor.get(-1, -1, -1, 500);
+			}
+			Font.render((y%10)+"",screen,0,0+(y*8),color,1);
+		}
+		//String msg="Hello World, Holycow!";
+		//Font.render(msg,screen,screen.xOffset+screen.width/2-msg.length()*8/2,screen.yOffset+screen.height/2-4,GameColor.get(-1,-1,-1,000));
+		level.renderEntities(screen);//render entities on top of tiles & fonts
+		for(int y=0;y<screen.height;y++){
+			for(int x=0;x<screen.width;x++){
+				//as generated via proceeding screen.render
+				//screen.pixels pre-color mapping
+				//pixels post-color mapping
+				//pixels.size==screen.pixels.size via init()
+				int colorCode=screen.pixels[x+y*screen.width];
+				if(colorCode<255){pixels[x+y*WIDTH]=colors[colorCode];}
+			}
+		}
+		Graphics g=bs.getDrawGraphics();
+		//refers to this canvas frame frame.add(this,BorderLayout.CENTER)
+		g.drawImage(image,0,0,getWidth(),getHeight(),null);
+		g.dispose();
+		bs.show();
+	}
+	public void tick(){ //update game logic
+		tickcount++;
+		level.tick(); //update this level's tile layout to display next in frame
+	}
+	public void init(){
+		int index=0;
+		//255 will be the transparent color
+		//map 6^3 colors into colors array
+		for(int r=0;r<6;r++){
+			for(int g=0;g<6;g++){
+				for(int b=0;b<6;b++){
+					int rr=(r*255/5); //corresponding to 6 shades of red 0,51,102,153,204,255
+					int gg=(g*255/5); //6 shades of blue
+					int bb=(b*255/5); //6 shades of green
+					colors[index++]=rr<<16|gg<<8|bb; //bit shift for 8bit color correction
+				}
+			}
+		}
+		//colors.get(a,b,c,d) usage: 555 full red,green,blue; 505 full red, 0 green,full blue
+		screen=new Screen(WIDTH,HEIGHT,new SpriteSheet("/spriteSheet.png"));
+		input=new InputHandler(this);
+		level=new Level("/levels/medium_water_level.png");
+		player=new PlayerMP(level,100,100,input,
+				JOptionPane.showInputDialog(this,"Enter a username"),null,-1);
+		level.addEntity(player);
+		if(isApplet){
+			Packet00Login loginPacket=new Packet00Login(player.getUsername());
+			if(socketServer!=null){socketServer.addConnection((PlayerMP)player,loginPacket);}
+			//socketClient.sendData("ping".getBytes());
+			loginPacket.writeData(socketClient);
+		}
+	}
+	@Override
+	public void run(){
+		long lastTimeNS=System.nanoTime();
+		double nsPerTick=1000000000D/60D; //time between game ticks
+		int ticks=0;
+		int frames=0;
+		long lastTimeMS=System.currentTimeMillis();
+		double ticksToProcess=0;
+		double framesPerS=500;
+		long msPerFrame=(long)(1000/framesPerS);
+		
+		init();
+		
+		while(running){
+			long nowTimeNS=System.nanoTime();
+			//number of ticks to process -> elapsedNS*ticksPerNS
+			ticksToProcess+=(nowTimeNS-lastTimeNS)/nsPerTick; 
+			lastTimeNS=nowTimeNS;
+			boolean shouldRender=true;
+			while(ticksToProcess>=1){
+				ticks++;
+				tick();
+				ticksToProcess-=1;
+				shouldRender=true;
+			} //completes approximately after nsPerTick for fast tick()
+			try {Thread.sleep(msPerFrame);}catch(InterruptedException e){e.printStackTrace();}
+			//process approximately framesPerS
+			if(shouldRender){
+				frames++;
+				render();
+			}
+			//Print framesPerS & TicksPerS
+			if(System.currentTimeMillis()-lastTimeMS>=1000){
+				lastTimeMS+=1000;
+				debug(DebugLevel.INFO,"ticks="+ticks+" frames="+frames+" sPerFrame="+msPerFrame);
+				frames=0;
+				ticks=0;
+			}
+		}
+	}
+	public synchronized void stop(){
+		running=false;
+		try {thread.join();}catch (InterruptedException e){e.printStackTrace();}
+	}
+	public synchronized void start(){
+		running=true;
+		thread=new Thread(this,NAME+"_main");
+		thread.start();
+		if(isApplet){
+			if(JOptionPane.showConfirmDialog(this,"Do you want to act as a server?")==0){
+				socketServer=new GameServer(this);
+				socketServer.setName("Server");
+				socketServer.start();
+			}
+			socketClient=new GameClient(this,"localhost");
+			socketClient.setName("Client");
+			socketClient.start(); //start the client Send & Receive Thread
+		}
+	}
+	public static void main(String arg[]){
+		//String a = System.getProperty("user.dir")+"/images/spriteSheet.png";
+		new Game().start();
+	}
+
+
+}

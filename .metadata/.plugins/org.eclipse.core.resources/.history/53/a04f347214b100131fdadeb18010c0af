@@ -1,0 +1,26 @@
+package mosfet.game;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+
+public class GameLauncher {
+
+	private static Game game=new Game();
+	
+	public static void main(String args[]){
+		game.setMinimumSize(new Dimension(game.DIMENSIONS));
+		game.setMaximumSize(new Dimension(game.DIMENSIONS));
+		game.setPreferredSize(new Dimension(game.DIMENSIONS));
+		game.frame=new JFrame(Game.NAME);
+		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		game.frame.setLayout(new BorderLayout());
+		game.frame.add(game,BorderLayout.CENTER); //add this canvas
+		game.frame.pack(); //no smaller than preferred size
+		game.frame.setLocationRelativeTo(null);
+		game.frame.setVisible(true);
+	
+		game.start();
+	}
+}
