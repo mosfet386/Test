@@ -6,7 +6,6 @@ import mosfet.game.InputHandler;
 import mosfet.game.level.Level;
 
 public class PlayerMP extends Player{
-
 	public InetAddress ipAddress;
 	public int port;
 	
@@ -27,5 +26,4 @@ public class PlayerMP extends Player{
 		this.port=port;
 
 	}
-
 }

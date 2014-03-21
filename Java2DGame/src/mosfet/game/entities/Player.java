@@ -15,6 +15,9 @@ public class Player extends Mob{
 	private int tickCount=0;
 	private String username;
 	
+	public String getUsername() {
+		return this.username;
+	}
 	@Override
 	public boolean hasCollided(int dx, int dy) {
 		int xMin=0, xMax=7;
@@ -82,11 +85,14 @@ public class Player extends Mob{
 	public void tick() {
 		int dx=0;
 		int dy=0;
-		//change player's position on screen
-		if(input.up.isPressed()){dy--;}
-		if(input.down.isPressed()){dy++;}
-		if(input.left.isPressed()){dx--;}
-		if(input.right.isPressed()){dx++;}
+		//if input is null, then this is not the local player
+		if(input!=null){
+			//change player's position on screen
+			if(input.up.isPressed()){dy--;}
+			if(input.down.isPressed()){dy++;}
+			if(input.left.isPressed()){dx--;}
+			if(input.right.isPressed()){dx++;}
+		}
 		if(dx!=0 || dy!=0){move(dx,dy); isMoving=true;}
 		else{isMoving=false;}
 		//is the player on a water tile?

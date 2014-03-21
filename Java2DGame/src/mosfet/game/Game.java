@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import mosfet.game.entities.Player;
+import mosfet.game.entities.PlayerMP;
 import mosfet.game.gfx.Font;
 import mosfet.game.gfx.GameColor;
 import mosfet.game.gfx.Screen;
@@ -125,10 +126,12 @@ public class Game extends Canvas implements Runnable{
 		screen=new Screen(WIDTH,HEIGHT,new SpriteSheet("/spriteSheet.png"));
 		input=new InputHandler(this);
 		level=new Level("/levels/medium_water_level.png");
-//		player=new Player(level,0,0,input,JOptionPane.showInputDialog(this,"Enter a username"));
-//		level.addEntity(player);
-//		socketClient.sendData("ping".getBytes());
-		Packet00Login loginPacket=new Packet00Login(JOptionPane.showInputDialog(this,"Enter a username"));
+		player=new PlayerMP(level,100,100,input,
+				JOptionPane.showInputDialog(this,"Enter a username"),null,-1);
+		level.addEntity(player);
+		Packet00Login loginPacket=new Packet00Login(player.getUsername());
+		if(socketServer!=null){socketServer.addConnection((PlayerMP)player,loginPacket);}
+		//socketClient.sendData("ping".getBytes());
 		loginPacket.writeData(socketClient);
 	}
 	@Override
