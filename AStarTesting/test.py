@@ -8,4 +8,6 @@ print(200**.5)
 myset={1,2,3}
 print(myset)
 myset.add(3)
-print(myset)
+a=list(range(10))
+a=a.reverse()
+print(a)

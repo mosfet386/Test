@@ -35,11 +35,11 @@ class Tile(pygame.Rect):
         half_width=Tile.width//2
         for tile in Tile.List:
             if not(tile.type=='empty'):
-                pygame.draw.rect(screen,[50,50,50],tile)
+                pygame.draw.rect(screen,[150,150,150],tile)
             if tile.G!=0:
-                utils.text_to_screen(screen,tile.G,tile.x,tile.y+half_width,color=[150,50,10])
+                utils.text_to_screen(screen,tile.G,tile.x,tile.y+half_width,color=[120,150,50])
             if tile.H!=0:
-                utils.text_to_screen(screen,tile.H,tile.x+half_width,tile.y+half_width,color=[10,50,150])
+                utils.text_to_screen(screen,tile.H,tile.x+half_width,tile.y+half_width,color=[20,60,150])
             if tile.F!=0:
-                utils.text_to_screen(screen,tile.F,tile.x+half_width,tile.y,color=[50,150,10])               
+                utils.text_to_screen(screen,tile.F,tile.x+half_width,tile.y,color=[50,150,180])               
             #utils.text_to_screen(screen,tile.number,tile.x,tile.y)

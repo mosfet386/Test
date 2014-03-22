@@ -13,7 +13,7 @@ pygame.font.init()
 screen = pygame.display.set_mode((720,440))
 
 clock=pygame.time.Clock()
-FPS=24
+FPS=25
 total_frames=0
 
 #border tiles
@@ -35,9 +35,9 @@ enemy1=Enemy(200,240)
 player=Player(400,120)
 
 while True:
-	a_star(screen,player)
+	screen.fill([255,255,255])
+	a_star(screen,player,total_frames,FPS)
 	player_input(screen,player)
-	screen.fill([0,0,0])
 	Tile.draw_tiles(screen)
     #screen.fill([0,0,0])
     #utils.text_to_screen(screen,"This is your font",250,250,50)

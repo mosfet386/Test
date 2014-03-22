@@ -1,1 +1,8 @@
 MODULES_MANAGER_V2
+a_star|/home/mosfet386/git/Test/AStarTesting/a_star.py
+game_objects|/home/mosfet386/git/Test/AStarTesting/game_objects.py
+main|/home/mosfet386/git/Test/AStarTesting/main.py
+player_input|/home/mosfet386/git/Test/AStarTesting/player_input.py
+test|/home/mosfet386/git/Test/AStarTesting/test.py
+tileC|/home/mosfet386/git/Test/AStarTesting/tileC.py
+utils|/home/mosfet386/git/Test/AStarTesting/utils.py
