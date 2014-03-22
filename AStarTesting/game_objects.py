@@ -14,7 +14,7 @@ class Character(pygame.Rect):
 		return (self.x/self.width)+(self.y/self.height)*Tile.V+Tile.H
 	#return the tile object the character is on
 	def get_tile(self):
-		return Tile.get_tile(self.get_number)
+		return Tile.get_tile(self.get_number())
 
 class Enemy(Character):
 
@@ -26,7 +26,7 @@ class Enemy(Character):
 	@staticmethod
 	def draw_enemies(screen):
 		for enemy in Enemy.List:
-			pygame.draw.rect(screen,[255,0,0],enemy)
+			pygame.draw.rect(screen,[250,0,0],enemy)
 
 class Player(Character):
 
