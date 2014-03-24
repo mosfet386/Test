@@ -1,0 +1,25 @@
+package com.base.engine;
+
+import org.lwjgl.input.Keyboard;
+
+public class Game {
+	
+	public Game(){}
+	public void input(){
+		if(Input.getKeyDown(Keyboard.KEY_UP)){
+			System.out.println("Up has been pressed");
+		}
+		if(Input.getKeyUp(Keyboard.KEY_UP)){
+			System.out.println("Up has been released");
+		}
+		if(Input.getMouseDown(1)){
+			System.out.println("Mouse button pressed at "+Input.getMousePostion());
+		}
+		if(Input.getMouseUp(1)){
+			System.out.println("Mouse button released "+Input.getMousePostion());
+		}
+	}
+	public void update(){}
+	public void render(){}
+
+}

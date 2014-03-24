@@ -1,0 +1,9 @@
+package com.base.engine;
+
+public class MainComponent {
+	
+	public static main(String args[]){
+		System.out.println("Hello World");
+	}
+
+}

@@ -8520,3 +8520,44 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp
 
 !ENTRY org.eclipse.core.resources 2 10035 2014-03-23 17:10:02.656
 !MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.jface 2 0 2014-03-23 19:25:29.484
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-03-23 19:25:29.484
+!MESSAGE A conflict occurred for CTRL+D:
+Binding(CTRL+D,
+	ParameterizedCommand(Command(org.eclipse.debug.ui.commands.eof,EOF,
+		Send end of file,
+		Category(org.eclipse.debug.ui.category.run,Run/Debug,Run/Debug command category,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5aad75c8,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.debug.ui.console,,,system)
+Binding(CTRL+D,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.text.delete.line,Delete Line,
+		Delete a line of text,
+		Category(org.eclipse.ui.category.textEditor,Text Editing,Text Editing Commands,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@320fcbfa,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.textEditorScope,,,system)
+
+!ENTRY org.python.pydev.shared_core 4 4 2014-03-23 19:40:58.635
+!MESSAGE Interpreter:  not found
+!STACK 0
+org.python.pydev.core.MisconfigurationException: Interpreter:  not found
+	at org.python.pydev.ui.interpreters.AbstractInterpreterManager.getInterpreterInfo(AbstractInterpreterManager.java:466)
+	at org.python.pydev.ui.interpreters.AbstractInterpreterManager.getInterpreterInfo(AbstractInterpreterManager.java:1)
+	at org.python.pydev.plugin.nature.PythonNature.getProjectInterpreter(PythonNature.java:1198)
+	at org.python.pydev.plugin.nature.PythonPathNature.getVariableSubstitution(PythonPathNature.java:463)
+	at org.python.pydev.plugin.nature.PythonPathNature.getVariableSubstitution(PythonPathNature.java:447)
+	at org.python.pydev.core.docutils.StringSubstitution.<init>(StringSubstitution.java:42)
+	at org.python.pydev.plugin.nature.PythonPathNature.getOnlyProjectPythonPathStr(PythonPathNature.java:163)
+	at org.python.pydev.plugin.nature.PythonNature$RebuildPythonNatureModules.run(PythonNature.java:135)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)
+
+!ENTRY com.instantiations.eclipse 1 0 2014-03-23 20:32:46.018
+!MESSAGE cannot support aboutToShutdown event - 2
+
+!ENTRY com.instantiations.eclipse 1 0 2014-03-23 20:32:46.082
+!MESSAGE WIN32_GET_KEY_STATE not found

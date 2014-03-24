@@ -1,0 +1,14 @@
+package com.base.engine;
+
+public class MainComponent {
+	
+	public Static final int WIDTH=800;
+	public Static final int HEIGHT=600;
+	public Static final String TITLE="Java3DEngine";
+			
+	public static void main(String args[]){
+		System.out.println("Hello World");
+		Window.createWindow(WIDTH,HEIGHT,TITLE);
+	}
+
+}

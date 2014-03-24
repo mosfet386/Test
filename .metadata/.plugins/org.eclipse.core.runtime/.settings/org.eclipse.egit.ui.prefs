@@ -1,2 +1,2 @@
-commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\n<messages>\n<message>Updates to AStar</message>\n<message>Adding a* testing</message>\n<message>Added fix for Java2DGame, removal of disconnected players from server</message>\n</messages>
+commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\n<messages>\n<message>Serveral additions and changes made to Py2DSandboxGame</message>\n<message>Updates to AStar</message>\n<message>Adding a* testing</message>\n<message>Added fix for Java2DGame, removal of disconnected players from server</message>\n</messages>
 eclipse.preferences.version=1

@@ -1,0 +1,43 @@
+package com.base.engine;
+
+public class MainComponent {
+	
+	public static final int WIDTH=800;
+	public static final int HEIGHT=600;
+	public static final String TITLE="Java3DEngine";
+			
+	private boolean isRunning;
+	
+	public static void main(String args[]){
+		Window.createWindow(WIDTH,HEIGHT,TITLE);
+		MainComponent game=new MainComponent();
+		game.start();
+	}
+	public MainComponent(){
+		isRunning=false;
+	}
+	public void start(){
+		if(isRunning)
+			return;
+		run();
+	}
+	public void stop(){
+		if(!isRunning)
+			return;
+		isRunning=false;
+	}
+	private void run(){
+		isRunning=true;
+		while(isRunning){
+			while(Window.isCloseRequested())
+				stop();
+			Window.render();
+		}
+		cleanup();
+	}
+	private void render(){
+		Window.render();
+	}
+	private void cleanup(){Window.dispose();}
+
+}
