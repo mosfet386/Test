@@ -32,6 +32,21 @@ public class Vector3f {
 //		double sin=(double)Math.sin(radians);
 //		return new Vector3f((float)(x*cos-y*sin),(float)(x*sin+y*cos));
 //	}
+	public Vector3f rotate(float angle,Vector3f axis){
+		float sinHalfAngle=(float)Math.sin(Math.toRadians(angle/2));
+		float cosHalfAngle=(float)Math.cos(Math.toRadians(angle/2));
+		float rX=axis.getX()*sinHalfAngle;
+		float rY=axis.getY()*sinHalfAngle;
+		float rZ=axis.getZ()*sinHalfAngle;
+		float rW=cosHalfAngle;
+		Quaternion rotation=new Quaternion(rX,rY,rZ,rW);
+		Quaternion conjugate=rotation.conjagate();
+		Quaternion w=rotation.mul(this).mul(conjugate); //rotate and throw away imaginary comp
+		this.x=w.getX();
+		this.y=w.getY();
+		this.z=w.getZ();
+		return this;
+	}
 	public Vector3f cross(Vector3f vector){
 		float xx=y*vector.getZ()-z*vector.getY();
 		float yy=z*vector.getX()-x*vector.getZ();

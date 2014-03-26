@@ -17,6 +17,7 @@ public class MainComponent {
 		game.start();
 	}
 	public MainComponent(){
+		RenderUtility.initGraphics(); //Set OpenGL preferences
 		isRunning=false;
 		game=new Game();
 	}
@@ -70,6 +71,7 @@ public class MainComponent {
 		cleanup();
 	}
 	private void render(){
+		RenderUtility.clearScreen();
 		game.render();
 		Window.render();
 	}
