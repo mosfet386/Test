@@ -21,10 +21,7 @@ public class Vector3f {
 	public float dot(Vector3f vector){return x*vector.getX()+y*vector.getY()+z*vector.getZ();}
 	public Vector3f normalize(){
 		float length=length();
-		x/=length;
-		y/=length;
-		z/=length;
-		return this;
+		return new Vector3f(x/length,y/length,z/length);
 	}
 //	public Vector3f rotate(float angle){
 //		double radians=(double) Math.toRadians(angle);
@@ -45,7 +42,7 @@ public class Vector3f {
 		this.x=w.getX();
 		this.y=w.getY();
 		this.z=w.getZ();
-		return this;
+		return new Vector3f(w.getX(),w.getY(),w.getZ());
 	}
 	public Vector3f cross(Vector3f vector){
 		float xx=y*vector.getZ()-z*vector.getY();
@@ -54,6 +51,7 @@ public class Vector3f {
 		return new Vector3f(xx,yy,zz);
 	}
 	//scaler vector operations
+	public Vector3f abs(){return new Vector3f(Math.abs(x),Math.abs(y),Math.abs(z));}
 	public Vector3f add(Vector3f vector){return new Vector3f(x+vector.getX(),y+vector.getY(),z+vector.getZ());}
 	public Vector3f add(float value){return new Vector3f(x+value,y+value,z+value);}
 	public Vector3f sub(Vector3f vector){return new Vector3f(x-vector.getX(),y-vector.getY(),z-vector.getZ());}

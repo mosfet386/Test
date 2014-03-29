@@ -5,63 +5,116 @@ import org.lwjgl.input.Keyboard;
 public class Game {
 	
 	private Mesh mesh;
+	private Material material;
 	private Shader shader;
 	private Transform transform;
 	private Camera camera;
 	float temp=0.0f;
 	
+	PointLight pLight1=new PointLight(
+						new BaseLight(new Vector3f(1,0.5f,0),0.8f),
+						new Attenuation(0,0,1),
+						new Vector3f(-2,0,5f),
+						10);
+	PointLight pLight2=new PointLight(
+						new BaseLight(new Vector3f(0,0.5f,1),0.8f),
+						new Attenuation(0,0,1),
+						new Vector3f(2,0,7f),
+						10);
+	
+	SpotLight sLight1=new SpotLight(
+						new PointLight(
+							new BaseLight(new Vector3f(0,1f,1f),0.8f),
+							new Attenuation(0,0,0.1f),
+							new Vector3f(-2,0,5f),
+							30),
+						new Vector3f(1,1,1),
+						0.7f);
+	
 	public Game(){
-		mesh=ResourceLoader.loadMesh("cube2.obj");
-		shader=new Shader();
+		material=new Material(new Texture("testgrid.png"),
+								new Vector3f(1,1,1),1,8);
+		shader=PhongShader.getInstance();
 		camera=new Camera();
-//		mesh=new Mesh();
-//		shader=new Shader();
-//		Vertex[] vertices=new Vertex[] {new Vertex(new Vector3f(-1,-1,0)),
-//									new Vertex(new Vector3f(0,1,0)),
-//									new Vertex(new Vector3f(1,-1,0)),
-//									new Vertex(new Vector3f(0,-1,1))};
+		
+//		Vertex[] vertices=new Vertex[] {new Vertex(new Vector3f(-1,-1,0),new Vector2f(0,0)),
+//									new Vertex(new Vector3f(0,1,0),new Vector2f(0.5f,0)),
+//									new Vertex(new Vector3f(1,-1,0),new Vector2f(1.0f,0)),
+//									new Vertex(new Vector3f(0,-1,1),new Vector2f(0.0f,0.5f))};
 //		//these indices will draw the vertices in the above order
-//		int[] indices=new int[] {0,1,3,
-//								3,1,2,
-//								2,1,0,
+//		//configured for clockwise insertion
+//		int[] indices=new int[] {3,1,0,
+//								2,1,3,
+//								0,1,2,
 //								0,2,3};
-//		
-//		mesh.addVertices(vertices,indices);
+		
+//		Vertex[] vertices = new Vertex[] { new Vertex( new Vector3f(-1.0f, -1.0f, 0.5773f),	new Vector2f(0.0f, 0.0f)),
+//		        new Vertex( new Vector3f(0.0f, -1.0f, -1.15475f),		new Vector2f(0.5f, 0.0f)),
+//		        new Vertex( new Vector3f(1.0f, -1.0f, 0.5773f),		new Vector2f(1.0f, 0.0f)),
+//		        new Vertex( new Vector3f(0.0f, 1.0f, 0.0f),      new Vector2f(0.5f, 1.0f)) };
+//
+//				int indices[] =	 {  0, 3, 1,
+//									1, 3, 2,
+//									2, 3, 0,
+//									1, 2, 0 };
+		
+//		float fieldDepth = 10.0f;
+//		float fieldWidth = 10.0f;
+//		Vertex[] vertices = new Vertex[] { 	
+//				new Vertex( new Vector3f(-fieldWidth, 0.0f, -fieldDepth), new Vector2f(0.0f, 0.0f)),
+//				new Vertex( new Vector3f(-fieldWidth, 0.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
+//				new Vertex( new Vector3f(fieldWidth * 3, 0.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
+//				new Vertex( new Vector3f(fieldWidth * 3, 0.0f, fieldDepth * 3), new Vector2f(1.0f, 1.0f)),
+//		new Vertex( new Vector3f(-fieldWidth, 2.0f, -fieldDepth), new Vector2f(0.0f, 0.0f)),
+//		new Vertex( new Vector3f(-fieldWidth, 2.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
+//		new Vertex( new Vector3f(fieldWidth * 3, 2.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
+//		new Vertex( new Vector3f(fieldWidth * 3, 2.0f, fieldDepth * 3), new Vector2f(1.0f, 1.0f))};
+//int indices[] = { 0, 1, 2,
+//			      2, 1, 3,
+//				5, 4, 6,
+//				6, 7, 5};
+		
+		float fieldDepth = 10.0f;
+		float fieldWidth = 10.0f;
+		Vertex[] vertices = new Vertex[] { 	
+				new Vertex( new Vector3f(-fieldWidth, 0.0f, -fieldDepth), new Vector2f(0.0f, 0.0f)),
+				new Vertex( new Vector3f(-fieldWidth, 0.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
+				new Vertex( new Vector3f(fieldWidth * 3, 0.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
+				new Vertex( new Vector3f(fieldWidth * 3, 0.0f, fieldDepth * 3), new Vector2f(1.0f, 1.0f))};
+		int indices[] = { 0, 1, 2,
+					      2, 1, 3};
+		mesh=new Mesh(vertices,indices,true);
+		
 		Transform.setProjection(70f,Window.getWidth(),Window.getHeight(), 0.1f,1000);
 		Transform.setCamera(camera);
 		transform=new Transform();
+		PhongShader.setAmbientLight(new Vector3f(0.1f,0.1f,0.1f));
+		PhongShader.setDirectionalLight(new DirectionalLight(
+				new BaseLight(new Vector3f(1,1,1),0.1f),new Vector3f(1,1,1)));
+		PhongShader.setPointLights(new PointLight[]{pLight1,pLight2});
+		PhongShader.setSpotLights(new SpotLight[]{sLight1});
 		
-		shader.addVertexShader(ResourceLoader.loadShader("basicVertex.vsh"));
-		shader.addFragmentShader(ResourceLoader.loadShader("basicFragment.fsh"));
-		shader.compileShader();
-		shader.addUniform("transform");
 		System.out.println(RenderUtility.getOpenGLVersion());
 	}
 	public void input(){
 		camera.input();
-//		if(Input.getKeyDown(Keyboard.KEY_UP)){
-//			System.out.println("Up has been pressed");
-//		}
-//		if(Input.getKeyUp(Keyboard.KEY_UP)){
-//			System.out.println("Up has been released");
-//		}
-//		if(Input.getMouseDown(1)){
-//			System.out.println("Mouse button pressed at "+Input.getMousePosition());
-//		}
-//		if(Input.getMouseUp(1)){
-//			System.out.println("Mouse button released "+Input.getMousePosition());
-//		}
 	}
 	public void update(){
 		temp+=Time.getDelta();
-		float sinTemp=(float)Math.sin(temp);
-		transform.setTranslation(sinTemp,0,5);
-		transform.setRotation(0,sinTemp*180,0);
-		//transform.setScale(0.7f*sinTemp,0.7f*sinTemp,0.7f*sinTemp);
+		//float sinTemp=(float)Math.sin(temp);
+		transform.setTranslation(0,-1,5);
+		//transform.setRotation(0,sinTemp*180,0);
+		pLight1.setPosition(new Vector3f(3,0,8.0f*(float)(Math.sin(temp)+1.0/2.0)+10));
+		pLight2.setPosition(new Vector3f(7,0,8.0f*(float)(Math.cos(temp)+1.0/2.0)+10));
+	
+		sLight1.getPointLight().setPosition(camera.getPos());
+		sLight1.setDirection(camera.getForward());
 	}
 	public void render(){
+		RenderUtility.setClearColor(Transform.getCamera().getPos().div(2048f).abs());
 		shader.bind();
-		shader.setUniform("transform",transform.getProjectedTransformation());
+		shader.updateUniforms(transform.getTransformation(),
+								transform.getProjectedTransformation(),material);
 		mesh.draw();
 	}
 

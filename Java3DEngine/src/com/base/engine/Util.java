@@ -41,6 +41,11 @@ public class Util {
 			buffer.put(vertices[i].getPos().getX());
 			buffer.put(vertices[i].getPos().getY());
 			buffer.put(vertices[i].getPos().getZ());
+			buffer.put(vertices[i].getTextureCoord().getX());
+			buffer.put(vertices[i].getTextureCoord().getY());
+			buffer.put(vertices[i].getNormal().getX());
+			buffer.put(vertices[i].getNormal().getY());
+			buffer.put(vertices[i].getNormal().getZ());
 		}
 		//Move the buffer header from the back to the front, required by OpenGL
 		buffer.flip();

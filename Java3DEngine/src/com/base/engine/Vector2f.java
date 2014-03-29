@@ -19,7 +19,7 @@ public class Vector2f {
 		float length=length();
 		x/=length;
 		y/=length;
-		return this;
+		return new Vector2f(x/length,y/length);
 	}
 	public Vector2f rotate(float angle){
 		double radians=(double) Math.toRadians(angle);

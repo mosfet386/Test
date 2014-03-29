@@ -6,7 +6,13 @@ public class Matrix4f {
 	private float[][] m;
 
 	public Matrix4f(){m=new float[4][4];}
-	public float[][] getM(){return m;}
+	public float[][] getM(){
+		float[][] result=new float[4][4];
+		for(int i = 0; i < 4; i++)
+			for(int j = 0; j < 4; j++)
+				result[i][j] = m[i][j];
+		return result;
+	}
 	public float get(int x,int y){return this.m[x][y];}
 	public void setM(float[][] m){this.m = m;}
 	public void set(int x,int y,float value){this.m[x][y]=value;}

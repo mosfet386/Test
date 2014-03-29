@@ -4,6 +4,8 @@ package com.base.engine;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.HashMap;
 
 public class Shader {
@@ -53,14 +55,14 @@ public class Shader {
 		//lastly, dispatch this shader program
 		glAttachShader(program,shader);
 	}
-	public void addVertexShader(String text){
-		addProgram(text,GL_VERTEX_SHADER);
+	public void addVertexShaderFromFile(String text){
+		addProgram(loadShader(text),GL_VERTEX_SHADER);
 	}
-	public void addFragmentShader(String text){
-		addProgram(text,GL_FRAGMENT_SHADER);
+	public void addFragmentShaderFromFile(String text){
+		addProgram(loadShader(text),GL_FRAGMENT_SHADER);
 	}
-	public void addGeometryShader(String text){
-		addProgram(text,GL_GEOMETRY_SHADER);
+	public void addGeometryShaderFromFile(String text){
+		addProgram(loadShader(text),GL_GEOMETRY_SHADER);
 	}
 	public void addUniform(String uniform){
 		int uniformLocation=glGetUniformLocation(program,uniform);
@@ -83,5 +85,27 @@ public class Shader {
 	public void setUniform(String uniformName,Matrix4f value){
 		//true for row major order, value[row][col]
 		glUniformMatrix4(uniforms.get(uniformName),true,Util.createFlippedBuffer(value));
+	}
+	public void updateUniforms(Matrix4f worldMatrix,Matrix4f projectedMatrix,Material material){
+		
+	}
+	private static String loadShader(String fileName){
+		
+		StringBuilder shaderSource=new StringBuilder();
+		BufferedReader shaderReader=null;
+		
+		try{
+			shaderReader=new BufferedReader(new FileReader("./res/shaders/"+fileName));
+			String line;
+			while((line=shaderReader.readLine())!=null){
+				shaderSource.append(line).append("\n");
+			}
+			shaderReader.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return shaderSource.toString();
 	}
 }

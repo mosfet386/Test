@@ -8,57 +8,29 @@ import org.lwjgl.input.Mouse;
 public class Input {
 	
 	public static final int NUM_KEY_CODES=256;
-	private static ArrayList<Integer> currentKeys=new ArrayList<Integer>();
-	private static ArrayList<Integer> downKeys=new ArrayList<Integer>();
-	private static ArrayList<Integer> upKeys=new ArrayList<Integer>();
-	
 	public static final int NUM_MOUSE_BUTTONS=5;
-	private static ArrayList<Integer> currentMouse=new ArrayList<Integer>();
-	private static ArrayList<Integer> downMouse=new ArrayList<Integer>();
-	private static ArrayList<Integer> upMouse=new ArrayList<Integer>();
-	
-	public static void update(){
-		
-		//Get Keyboard Updates
-		upKeys.clear();
-		//Get released keys
-		for(int i=0;i<NUM_KEY_CODES;i++){
-			if(!getKey(i)&&currentKeys.contains(i)){upKeys.add(i);}
-		}
-		downKeys.clear();
-		//Get keys just now pressed
-		for(int i=0;i<NUM_KEY_CODES;i++){
-			if(getKey(i)&&!currentKeys.contains(i)){downKeys.add(i);}
-		}
-		currentKeys.clear();
-		//Get pressed keys
-		for(int i=0;i<NUM_KEY_CODES;i++){
-			if(getKey(i)){currentKeys.add(i);}
-		}
-		
-		//Get Mouse Updates
-		upMouse.clear();
-		for(int i=0;i<NUM_MOUSE_BUTTONS;i++){
-			if(!getMouse(i)&&currentMouse.contains(i)){upMouse.add(i);}
-		}
-		downMouse.clear();
-		for(int i=0;i<NUM_MOUSE_BUTTONS;i++){
-			if(getMouse(i)&&!currentMouse.contains(i)){downMouse.add(i);}
-		}
-		currentMouse.clear();
-		for(int i=0;i<NUM_MOUSE_BUTTONS;i++){
-			if(getMouse(i)){currentMouse.add(i);}
-		}
-		
+	private static boolean[] lastKeys = new boolean[NUM_KEY_CODES];
+	private static boolean[] lastMouse = new boolean[NUM_MOUSE_BUTTONS];
+
+	public static void update()
+	{
+		for(int i = 0; i < NUM_KEY_CODES; i++)
+			lastKeys[i] = getKey(i);
+
+		for(int i = 0; i < NUM_MOUSE_BUTTONS; i++)
+			lastMouse[i] = getMouse(i);
 	}
 	public static boolean getKey(int keyCode){return Keyboard.isKeyDown(keyCode);}
-	public static boolean getKeyDown(int keyCode){return downKeys.contains(keyCode);}
-	public static boolean getKeyUp(int keyCode){return upKeys.contains(keyCode);}
+	public static boolean getKeyDown(int keyCode){return getKey(keyCode) && !lastKeys[keyCode];}
+	public static boolean getKeyUp(int keyCode){return !getKey(keyCode) && lastKeys[keyCode];}
 	public static boolean getMouse(int mouseButton){return Mouse.isButtonDown(mouseButton);}
-	public static boolean getMouseDown(int mouseButton){return downMouse.contains(mouseButton);}
-	public static boolean getMouseUp(int mouseButton){return upMouse.contains(mouseButton);}
+	public static boolean getMouseDown(int mouseButton){return getMouse(mouseButton) && !lastMouse[mouseButton];}
+	public static boolean getMouseUp(int mouseButton){return !getMouse(mouseButton) && lastMouse[mouseButton];}
 	public static Vector2f getMousePosition(){return new Vector2f(Mouse.getX(),Mouse.getY());}
-
+	public static void setMousePosition(Vector2f pos){Mouse.setCursorPosition((int)pos.getX(),(int)pos.getY());}
+	public static void setCursor(boolean enabled){Mouse.setGrabbed(!enabled);}
+	
+	
 	//All these constants come from LWJGL's Keyboard class
 	public static final int KEY_NONE            = 0x00;
 	public static final int KEY_ESCAPE          = 0x01;
