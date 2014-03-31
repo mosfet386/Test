@@ -60,7 +60,11 @@ public class MainComponent {
 				Input.update();
 				game.input();
 				game.update();
-				if(frameCounter>=Time.SECOND){System.out.println(frames);frames=0;frameCounter=0;}
+				if(frameCounter>=Time.SECOND)
+				{
+//					System.out.println(frames);
+					frames=0;frameCounter=0;
+				}
 			}
 			if(shouldRender){render();frames++;}
 			else{
