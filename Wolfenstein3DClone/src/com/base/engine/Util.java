@@ -1,5 +1,6 @@
 package com.base.engine;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class Util {
 		buffer.flip();
 		return buffer;
 		
+	}
+	public static ByteBuffer createByteBuffer(int size)	{
+		return BufferUtils.createByteBuffer(size);
 	}
 	public static IntBuffer createIntBuffer(int size){
 		return BufferUtils.createIntBuffer(size);
